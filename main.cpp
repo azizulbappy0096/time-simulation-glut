@@ -1160,7 +1160,7 @@ void update(int value) {
 
         _move_horse_cart.x += _speed;
         if(_move_horse_cart.x > 800) {
-            _move_horse_cart.x = -800.0f;
+            _move_horse_cart.x = 0.0f;
         }else if(_move_horse_cart.x < -400) {
             _move_horse_cart.x = 800.0f;
         }
