@@ -1,0 +1,20 @@
+# Object files
+*.o
+*.obj
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Precompiled headers / cache
+*.gch
+*.glslcache
+
+# Temporary files
+*.log
+*.tmp
+*~
+
+# MacOS
+.DS_Store
