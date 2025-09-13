@@ -1,8 +1,9 @@
 # depslib dependency file v1.0
-1757570495 source:e:\aiub\summer (24-25)\graphics\mid\project\scene1\main.cpp
+1757799571 source:e:\aiub\summer (24-25)\graphics\mid\project\scene1\main.cpp
 	<windows.h>
 	<GL/glut.h>
 	<math.h>
+	<iostream>
 
 1685354302 c:\msys64\mingw64\include\windows.h
 	<_mingw.h>

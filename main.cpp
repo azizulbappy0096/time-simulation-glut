@@ -1,6 +1,9 @@
 #include <windows.h>
 #include <GL/glut.h>
 #include <math.h>
+#include <iostream>
+
+using namespace std;
 
 // color codes
 struct Color {
@@ -14,21 +17,40 @@ struct Coordinate {
 Color woodColor = {138, 80, 53};
 Color house1BodyColor = {242, 236, 230};
 Color house1BodyColor2 = {219, 219, 219};
-
 Coordinate _move_cloud = {0.0f, 0.0f, 0.0f};
 Coordinate _move_boat = {0.0f, 0.0f, 0.0f};
-
+float _speed = 1.0f;
+bool stopAnimation = false;
 bool isDay = true;
 bool _volcano_erupting = false;
 float _window_mill_angle = 0.0f;
-
-float _currentOffset = 0.0f;
+Coordinate _move_horse_cart = {0.0f, 0.0f, 0.0f};
+float _horse_cart_angle = 0.0f;
+float _horse_legs_angle = 0.0f;
+float _current_offset = 0.0f;
+Coordinate _prev_mouse_pos = {0.0f, 0.0f, 0.0f};
 
 
 void drawCircle(float radius, float xc, float yc, float r, float g, float b)
 {
     glBegin(GL_POLYGON);// Draw a Red 1x1 Square centered at origin
 	for(int i=0;i<200;i++)
+        {
+            glColor3f(r,g,b);
+            float pi=3.1416;
+            float A=(i*2*pi)/200;
+            float r=radius;
+            float x = r * cos(A);
+            float y = r * sin(A);
+            glVertex2f(x+xc,y+yc);
+        }
+	glEnd();
+}
+
+void drawCircleOutlined(float radius, float xc, float yc, float r, float g, float b)
+{
+    glBegin(GL_LINE_LOOP);
+    for(int i=0;i<200;i++)
         {
             glColor3f(r,g,b);
             float pi=3.1416;
@@ -60,6 +82,75 @@ void drawWindMill1() {
     glColor3ub(94, 62, 37);
     glVertex2f(-98.85, 393.58);
     glVertex2f(21.54, 270.82);
+    glEnd();
+
+        // door
+    glColor3ub(woodColor.r, woodColor.g, woodColor.b);
+    glBegin(GL_QUADS);
+    glVertex2f(-143.13, 73.21);
+    glVertex2f(-139.75, -35.07);
+    glVertex2f(-76.73, -35.31);
+    glVertex2f(-76.06, 73.21);
+    glEnd();
+
+    for(int i = 1; i < 7; i++) {
+        glColor3ub(41, 41, 41);
+        glLineWidth(0.5);
+        glBegin(GL_LINES);
+        glVertex2f(-76.06 - i*10, 73.21);
+        glVertex2f(-76.73 - i*10, -35.31);
+        glEnd();
+    }
+
+    glLineWidth(4.0);
+    glColor3ub(201, 173, 145);
+    glBegin(GL_LINE_LOOP);
+    glVertex2f(-143.13, 73.21);
+    glVertex2f(-139.75, -35.07);
+    glVertex2f(-76.73, -35.31);
+    glVertex2f(-76.06, 73.21);
+    glEnd();
+
+    // window
+    glColor3ub(woodColor.r, woodColor.g, woodColor.b);
+    glBegin(GL_QUADS);
+    glVertex2f(-132.39, 190.40);
+    glVertex2f(-88.22, 190.40);
+    glVertex2f(-88.66, 141.47);
+    glVertex2f(-131.96, 141.90);
+    glEnd();
+
+    for(int i = 1; i < 6; i++) {
+        glColor3ub(41, 41, 41);
+        glLineWidth(0.5);
+        glBegin(GL_LINES);
+        glVertex2f(-88.22 - i*8, 190.40);
+        glVertex2f(-88.66 - i*8, 141.47);
+        glEnd();
+    }
+
+    // border
+    glLineWidth(3.0);
+    glColor3ub(201, 173, 145);
+    glBegin(GL_LINE_LOOP);
+    glVertex2f(-132.39, 190.40);
+    glVertex2f(-88.22, 190.40);
+    glVertex2f(-88.66, 141.47);
+    glVertex2f(-131.96, 141.90);
+    glEnd();
+
+    glLineWidth(6.0);
+    glColor3ub(201, 173, 145);
+    glBegin(GL_LINES);
+    glVertex2f(-132.39, 190.40);
+    glVertex2f(-88.66, 141.47);
+    glEnd();
+
+    glLineWidth(6.0);
+    glColor3ub(201, 173, 145);
+    glBegin(GL_LINES);
+    glVertex2f(-88.22, 190.40);
+    glVertex2f(-131.96, 141.90);
     glEnd();
 
     // fan
@@ -166,6 +257,42 @@ void drawWindMill1() {
     }
 
     glPopMatrix();
+
+}
+
+
+void drawHouse1Window() {
+    glBegin(GL_QUADS);
+    glColor3ub(52, 52, 52);
+    glVertex2f(-308.90, 115.27);
+    glVertex2f(-276.63, 116.25);
+    glColor3ub(102, 99, 99);
+    glVertex2f(-276.63, 79.58);
+    glVertex2f(-308.90, 79.58);
+    glEnd();
+
+    glColor3ub(woodColor.r, woodColor.g, woodColor.b);
+    glLineWidth(2.0);
+    glBegin(GL_LINE_LOOP);
+    glVertex2f(-308.90, 115.27);
+    glVertex2f(-276.63, 116.25);
+    glVertex2f(-276.63, 79.58);
+    glVertex2f(-308.90, 79.58);
+    glEnd();
+
+    glColor3ub(woodColor.r, woodColor.g, woodColor.b);
+    glBegin(GL_QUADS);
+    glVertex2f(-308.90, 115.27);
+    glVertex2f(-276.63, 116.25);
+    glVertex2f(-256.412, 88.53);
+    glVertex2f(-293.08, 88.82);
+    glEnd();
+
+    glBegin(GL_LINES);
+    glVertex2f(-299.10, 96.56);
+    glVertex2f(-302.82, 79.58);
+    glEnd();
+
 }
 
 void drawHouse1(Color roofColor = woodColor) {
@@ -336,6 +463,7 @@ void drawHouse1(Color roofColor = woodColor) {
     }
 
     // door border
+    glLineWidth(3.0);
     glColor3ub(201, 173, 145);
     glBegin(GL_LINE_LOOP);
     glVertex2f(-395.18, 20.05);
@@ -353,36 +481,25 @@ void drawHouse1(Color roofColor = woodColor) {
 
 
     // windows
-    glBegin(GL_QUADS);
-    glColor3ub(52, 52, 52);
-    glVertex2f(-308.90, 115.27);
-    glVertex2f(-276.63, 116.25);
-    glColor3ub(102, 99, 99);
-    glVertex2f(-276.63, 79.58);
-    glVertex2f(-308.90, 79.58);
-    glEnd();
+    drawHouse1Window();
 
-    glColor3ub(woodColor.r, woodColor.g, woodColor.b);
-    glLineWidth(2.0);
-    glBegin(GL_LINE_LOOP);
-    glVertex2f(-308.90, 115.27);
-    glVertex2f(-276.63, 116.25);
-    glVertex2f(-276.63, 79.58);
-    glVertex2f(-308.90, 79.58);
-    glEnd();
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glTranslatef(60, 0, 0);
+    drawHouse1Window();
+    glPopMatrix();
 
-    glColor3ub(woodColor.r, woodColor.g, woodColor.b);
-    glBegin(GL_QUADS);
-    glVertex2f(-308.90, 115.27);
-    glVertex2f(-276.63, 116.25);
-    glVertex2f(-256.412, 88.53);
-    glVertex2f(-293.08, 88.82);
-    glEnd();
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glTranslatef(0, -100, 0);
+    drawHouse1Window();
+    glPopMatrix();
 
-    glBegin(GL_LINES);
-    glVertex2f(-299.10, 96.56);
-    glVertex2f(-302.82, 79.58);
-    glEnd();
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glTranslatef(60, -100, 0);
+    drawHouse1Window();
+    glPopMatrix();
 }
 
 void drawHouse2() {
@@ -615,44 +732,43 @@ void drawTrees() {
 void drawBoat() {
     glBegin(GL_QUADS);
     glColor3ub(139, 69, 19);
-    glVertex2f(-500, -200);
-    glVertex2f(-300, -200);
+    glVertex2f(-537.19, -348.64);
+    glVertex2f(-337.19, -348.64);
     glColor3ub(160, 82, 45);
-    glVertex2f(-340.71, -249.27);
-    glVertex2f(-462.12, -249.27);
+    glVertex2f(-377.90, -397.92);
+    glVertex2f(-499.31, -397.92);
     glEnd();
 
     glBegin(GL_QUADS);
     glColor3ub(205, 133, 63);
-    glVertex2f(-449.03, -178.75);
-    glVertex2f(-348.71, -179.48);
+    glVertex2f(-486.22, -327.40);
+    glVertex2f(-385.90, -328.13);
     glColor3ub(222, 184, 135);
-    glVertex2f(-350,-200);
-    glVertex2f(-450, -200);
+    glVertex2f(-387.19, -348.64);
+    glVertex2f(-491.04, -348.64);
     glEnd();
 }
 
 
 void drawCurrent() {
+    if(stopAnimation) return;
     glLineWidth(2.0);
     glColor3ub(200, 255, 255);
-
-
     glBegin(GL_LINES);
     for (float x = -600; x < 600; x += 50) {
-        glVertex2f(x + _currentOffset, -100);
-        glVertex2f(x + 30 + _currentOffset, -600);
+        glVertex2f(x + _current_offset, -250);
+        glVertex2f(x + 30 + _current_offset, -600);
     }
     glEnd();
 
-    _currentOffset += 0.5f;
-    if (_currentOffset > 50) _currentOffset = 0;
+    _current_offset += 0.5f;
+    if (_current_offset > 50) _current_offset = 0;
 }
 void drawCanal() {
     glBegin(GL_QUADS);
     glColor3ub(0, 119, 190);
-    glVertex2f(-600, -100);
-    glVertex2f(600, -100);
+    glVertex2f(-600, -250);
+    glVertex2f(600, -250);
     glColor3ub(0, 82, 132);
     glVertex2f(600, -600);
     glVertex2f(-600, -600);
@@ -751,7 +867,6 @@ void drawSunAndClouds() {
 void drawVolcanoEruption() {
     if (!_volcano_erupting) return;
 
-
     glBegin(GL_TRIANGLE_FAN);
     glColor3ub(255, 255, 255);
     glVertex2f(-300, 533);
@@ -816,6 +931,196 @@ void drawVolcano() {
     // glEnd();
 }
 
+void drawHorseCart1() {
+    // body
+    glBegin(GL_QUADS);
+    glColor3ub(79, 60, 34);
+    glVertex2f(-577.88, -130.65);
+    glVertex2f(-389.65, -130.65);
+    glColor3ub(41, 30, 18);
+    glVertex2f(-389.65, -187.56);
+    glVertex2f(-577.27, -191.25);
+    glEnd();
+
+    for(int i = 1; i < 4; i++) {
+        glColor3ub(212, 138, 138);
+        glLineWidth(1);
+        glBegin(GL_LINES);
+        glVertex2f(-577.88, -130.65 - i*16);
+        glVertex2f(-389.65, -130.65 - i*16);
+        glEnd();
+    }
+
+    for(int i = 1; i < 10; i++) {
+        glColor3ub(212, 138, 138);
+        glLineWidth(3);
+        glBegin(GL_LINES);
+        glVertex2f(-577.88 + i*20, -130.65);
+        glVertex2f(-577.27 + i*20, -191.25);
+        glEnd();
+    }
+
+    // wheels hanger
+    glBegin(GL_QUADS);
+    glColor3ub(79, 60, 34);
+    glVertex2f(-557.54, -188.00);
+    glVertex2f(-526.88, -188.49);
+    glVertex2f(-537.74, -202.73);
+    glVertex2f(-547.88, -202.73);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glVertex2f(-420.04, -185.52);
+    glVertex2f(-410.76, -184.19);
+    glVertex2f(-411.72, -208.24);
+    glVertex2f(-420.36, -208.56);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glVertex2f(-538.80, -196.40);
+    glVertex2f(-538.44, -200.20);
+    glVertex2f(-417.29, -200.37);
+    glVertex2f(-417.70, -196.83);
+    glEnd();
+
+    // horse tier
+    glBegin(GL_QUADS);
+    glVertex2f(-417.62, -172.71);
+    glVertex2f(-417.36, -178.51);
+    glVertex2f(-346.72, -175.07);
+    glVertex2f(-347.08, -168.64);
+    glEnd();
+
+
+    // wheels
+    // 1
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glTranslatef(-542.60, -200.38, 0);
+    glRotatef(_horse_cart_angle, 0, 0, 1);
+    glTranslatef(542.60, 200.38, 0);
+    glLineWidth(4.0);
+    glColor3ub(102, 96, 89);
+    glBegin(GL_LINES);
+    glVertex2f(-565.18, -182.31);
+    glVertex2f(-542.60, -200.38);
+    glEnd();
+
+    glBegin(GL_LINES);
+    glVertex2f(-515.14, -193.28);
+    glVertex2f(-542.60, -200.38);
+    glEnd();
+
+    glBegin(GL_LINES);
+    glVertex2f(-551.57, -228.64);
+    glVertex2f(-542.60, -200.38);
+    glEnd();
+
+    glLineWidth(6.0);
+    drawCircleOutlined(26, -542.60, -200.38, 0.400f, 0.376f, 0.349f);
+    drawCircle(8, -542.60, -200.38, 0.400f, 0.376f, 0.349f);
+    glPopMatrix();
+
+    // 2
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glTranslatef(-416.26, -206.76, 0);
+    glRotatef(_horse_cart_angle, 0, 0, 1);
+    glTranslatef(416.26, 206.76, 0);
+    glLineWidth(4.0);
+    glColor3ub(102, 96, 89);
+    glBegin(GL_LINES);
+    glVertex2f(-435.67, -194.32);
+    glVertex2f(-416.26, -206.76);
+    glEnd();
+
+    glBegin(GL_LINES);
+    glVertex2f(-397.02, -195.76);
+    glVertex2f(-416.26, -206.76);
+    glEnd();
+
+    glBegin(GL_LINES);
+    glVertex2f(-415.57, -228.78);
+    glVertex2f(-416.26, -206.76);
+    glEnd();
+    drawCircleOutlined(20, -416.26, -206.76, 0.400f, 0.376f, 0.349f);
+    drawCircle(5, -416.26, -206.76, 0.400f, 0.376f, 0.349f);
+    glPopMatrix();
+
+    // horse
+    // body
+    glColor3ub(33, 33, 33);
+    glBegin(GL_QUADS);
+    glVertex2f(-350.36, -157.95);
+    glVertex2f(-257.38, -159.47);
+    glVertex2f(-256.24, -197.80);
+    glVertex2f(-349.98, -197.80);
+    glEnd();
+
+    // legs
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    if(!stopAnimation) {
+        glTranslatef(-300, -160, 0);
+        glRotatef(10 * sin(glutGet(GLUT_ELAPSED_TIME) / 100.0), 0, 0, 1);
+        glTranslatef(300, 160, 0);
+    }
+    glBegin(GL_QUADS);
+    glVertex2f(-336.69, -192.48);
+    glVertex2f(-325.69, -191.72);
+    glVertex2f(-323.79, -231.95);
+    glVertex2f(-335.93, -231.95);
+    glEnd();
+    glPopMatrix();
+
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    if(!stopAnimation) {
+        glTranslatef(-300, -160, 0);
+        glRotatef(-10 * sin(glutGet(GLUT_ELAPSED_TIME) / 100.0), 0, 0, 1);
+        glTranslatef(300, 160, 0);
+    }
+    glBegin(GL_QUADS);
+    glVertex2f(-281.67, -192.87);
+    glVertex2f(-269.52, -192.11);
+    glVertex2f(-269.52, -231.96);
+    glVertex2f(-281.67, -231.96);
+    glEnd();
+    glPopMatrix();
+
+    // neck
+    glBegin(GL_QUADS);
+    glVertex2f(-264.20, -172.75);
+    glVertex2f(-259.34, -186.10);
+    glVertex2f(-218.96, -155.24);
+    glVertex2f(-224.40, -147.08);
+    glEnd();
+
+    // head
+    glBegin(GL_QUADS);
+    glVertex2f(-229.62, -143.67);
+    glVertex2f(-200.13, -143.45);
+    glVertex2f(-200, -160);
+    glVertex2f(-228.71, -164.32);
+    glEnd();
+}
+
+void drawRoad() {
+    glBegin(GL_QUADS);
+    glColor3ub(160, 132, 84);
+    glVertex2f(-600, -80.85);
+    glVertex2f(600, -80.85);
+    glColor3ub(176, 157, 123);
+    glVertex2f(600, -250);
+    glVertex2f(-600, -250);
+    glEnd();
+
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glTranslatef(_move_horse_cart.x, _move_horse_cart.y, _move_horse_cart.z);
+    drawHorseCart1();
+    glPopMatrix();
+}
 
 void currentMode() {
     glBegin(GL_QUADS);
@@ -833,26 +1138,37 @@ void currentMode() {
     glBegin(GL_QUADS);
     if(isDay) glColor3ub(34, 139, 34);
     else glColor3ub(0, 100, 0);
-    glVertex2f(-598.68, -80.55);
-    glVertex2f(598.01, -80.62);
+    glVertex2f(-598.68, -80.85);
+    glVertex2f(598.01, -80.85);
     glVertex2f(600, 300);
     glVertex2f(-600, 300);
     glEnd();
 }
 
 void update(int value) {
-    _move_cloud.x += 1.0f;
-    if(_move_cloud.x > 800) {
-        _move_cloud.x = -800.0f;
-    }
-    _move_boat.x += 0.5f;
-    if(_move_boat.x > 800) {
-        _move_boat.x = -800.0f;
-    }
+    if(!stopAnimation) {
+        _move_cloud.x += _speed;
+        if(_move_cloud.x > 800) {
+            _move_cloud.x = -800.0f;
+        }
 
-    _window_mill_angle -= 0.5f;
-    if(_window_mill_angle < 0) {
-        _window_mill_angle += 360;
+        _window_mill_angle -= _speed;
+        if(_window_mill_angle < 0 || _window_mill_angle > 360) {
+            _window_mill_angle += 360;
+        }
+
+
+        _move_horse_cart.x += _speed;
+        if(_move_horse_cart.x > 800) {
+            _move_horse_cart.x = -800.0f;
+        }else if(_move_horse_cart.x < -400) {
+            _move_horse_cart.x = 800.0f;
+        }
+
+        _horse_cart_angle -= _speed;
+        if(_horse_cart_angle < 0 || _horse_cart_angle > 360) {
+            _horse_cart_angle += 360;
+        }
     }
 
     glutPostRedisplay();
@@ -866,16 +1182,64 @@ void volcanoEruptionTimer(int value) {
 }
 
 void keyboardHandler(unsigned char key, int x, int y) {
-    if (key == 'a' || key == 'A') {
-        _volcano_erupting = !_volcano_erupting;
-    }else if(key == 'n' || key == 'N') {
+    if(key == 'n' || key == 'N') {
         isDay = false;
     } else if(key == 'd' || key == 'D') {
         isDay = true;
-
+    } else if(key == 's' || key == 'S') {
+        stopAnimation = !stopAnimation;
+    } else if(key == 'e' || key == 'E') {
+        _speed -= 0.5f;
+    } else if (key == 'r' || key == 'R') {
+        _speed += 0.5f;
     }
 
      glutPostRedisplay();
+}
+
+void mouseHandler(int button, int state, int x, int y) {
+    if(stopAnimation) return;
+
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+          _volcano_erupting = !_volcano_erupting;
+    }
+}
+
+void mouseMotionHandler(int x, int y) {
+    float glX = (x / 1200.0f) * 1200 - 600; 
+    float glY = 400 - (y / 800.0f) * 800; 
+
+
+    if (glX >= -600 && glX <= 600 && glY >= -600 && glY <= -250) {
+        if(_prev_mouse_pos.x > glX) {
+            _move_boat.x -= _prev_mouse_pos.x - glX;
+             if(_move_boat.x < -600) {
+                _move_boat.x = 600.0f;
+            }
+        } else if(_prev_mouse_pos.x < glX) {
+            _move_boat.x += glX - _prev_mouse_pos.x;
+             if(_move_boat.x > 600) {
+                _move_boat.x = -600.0f;
+            }
+        }
+
+        if(_prev_mouse_pos.y > glY) {
+            _move_boat.y -= _prev_mouse_pos.y - glY;
+             if(_move_boat.y < -100) {
+                _move_boat.y = 0.0f;
+            }
+        } else if(_prev_mouse_pos.y < glY) {
+            _move_boat.y += glY - _prev_mouse_pos.y;
+             if(_move_boat.y > 100) {
+                _move_boat.y = 0.0f;
+            }
+        }
+        
+
+        glutPostRedisplay();
+    }
+
+    _prev_mouse_pos = {glX, glY, 0.0f};
 }
 
 
@@ -883,6 +1247,10 @@ void display() {
 	glClear(GL_COLOR_BUFFER_BIT);
     currentMode();
     drawSunAndClouds();
+
+    drawRoad();
+    drawCanal();
+
     drawHill();
     drawVolcano();
 
@@ -894,8 +1262,6 @@ void display() {
     drawHouse2();
     drawHouse3();
     drawHouse4();
-
-    drawCanal();
 	glutSwapBuffers();
 }
 
@@ -903,7 +1269,16 @@ void init() {
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluOrtho2D(-600, 600, -400, 800);
+    gluOrtho2D(-600, 600, -600, 800);
+
+    cout << "Instructions to interact with the scene:\n";
+    cout << "1. Press 'D' to switch to Day mode.\n";
+    cout << "2. Press 'N' to switch to Night mode.\n";
+    cout << "3. Press 'S' to Start/Stop the animation.\n";
+    cout << "4. Press 'E' to decrease the speed of moving objects.\n";
+    cout << "5. Press 'R' to increase the speed of moving objects.\n";
+    cout << "6. Click the left mouse button on the volcano to toggle eruption.\n";
+    cout << "7. Move the mouse cursor over the canal area to move the boats.\n";
 }
 
 /* Main function: GLUT runs as a console application starting at main()  */
@@ -919,7 +1294,8 @@ int main(int argc, char** argv) {
     glutTimerFunc(5000, volcanoEruptionTimer, 0);
 
     glutKeyboardFunc(keyboardHandler);
-
+    glutMouseFunc(mouseHandler);
+    glutPassiveMotionFunc(mouseMotionHandler);
     glutMainLoop();           // Enter the event-processing loop
     return 0;
 }
