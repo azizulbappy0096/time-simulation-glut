@@ -945,3 +945,9 @@
 1685354302 c:\msys64\mingw64\include\math.h
 	<crtdefs.h>
 
+1757887093 source:e:\aiub\summer (24-25)\graphics\mid\project\final_project\scene1\main.cpp
+	<windows.h>
+	<GL/glut.h>
+	<math.h>
+	<iostream>
+
