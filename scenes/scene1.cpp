@@ -1331,6 +1331,8 @@ void updateTimerScene1(int value) {
 
         _horse_legs_angleLeftScene1 = 10 * sin(glutGet(GLUT_ELAPSED_TIME) / 100.0);
         _horse_legs_angleRightScene1 = -10 * sin(glutGet(GLUT_ELAPSED_TIME) / 100.0);
+        
+        //cout<<glutGet(GLUT_ELAPSED_TIME)<<", "<<_horse_legs_angleLeftScene1<<", "<<_horse_legs_angleRightScene1<<endl;
 
         _current_offsetScene1 += 0.5f;
         if (_current_offsetScene1 > 50) _current_offsetScene1 = 0;

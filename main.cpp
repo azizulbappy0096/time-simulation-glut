@@ -8,7 +8,7 @@
 
 int currentScene = 1;
 
-void init() {    
+void init() {
     switch(currentScene) {
         case 1:
             initScene1();
@@ -25,6 +25,7 @@ void init() {
         default:
             break;
     }
+
 }
 
 void keyBoardHandler(unsigned char key, int x, int y) {
@@ -114,13 +115,13 @@ void mouseMotionHandler(int x, int y) {
 }
 
 int main(int argc, char** argv) {
-	glutInit(&argc, argv); 
+	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
-	glutInitWindowSize(1200, 800);   
-    glutCreateWindow("Time Travel Simulator"); 
+	glutInitWindowSize(1200, 800);
+    glutCreateWindow("Time Travel Simulator");
 
     init();
-	glutDisplayFunc(displayScene1); 
+	glutDisplayFunc(displayScene1);
 
     // scene 1 timer functions
     glutTimerFunc(25, updateTimerScene1, 0);
@@ -144,6 +145,6 @@ int main(int argc, char** argv) {
     glutMouseFunc(mouseHandler);
     glutPassiveMotionFunc(mouseMotionHandler);
 
-    glutMainLoop();           
+    glutMainLoop();
     return 0;
 }

@@ -998,3 +998,46 @@
 
 1757943480 e:\aiub\summer (24-25)\graphics\mid\project\final_project\scene1\scenes\scene2.h
 
+1757943050 source:e:\aiub\summer (24-25)\graphics\mid\project\final_project\merged_scene\scenes\scene1.cpp
+	<windows.h>
+	<GL/glut.h>
+	<math.h>
+	<iostream>
+
+1757943472 source:e:\aiub\summer (24-25)\graphics\mid\project\final_project\merged_scene\scenes\scene2.cpp
+	<windows.h>
+	<GL/glut.h>
+	<math.h>
+	<cmath>
+	<time.h>
+	<mmsystem.h>
+
+1757943529 source:e:\aiub\summer (24-25)\graphics\mid\project\final_project\merged_scene\scenes\scene3.cpp
+	<windows.h>
+	<GL/glut.h>
+	<math.h>
+	<iostream>
+	<cstdlib>
+	<ctime>
+
+1757943566 source:e:\aiub\summer (24-25)\graphics\mid\project\final_project\merged_scene\scenes\scene4.cpp
+	<windows.h>
+	<GL/glut.h>
+	<math.h>
+
+1757994212 source:e:\aiub\summer (24-25)\graphics\mid\project\final_project\merged_scene\main.cpp
+	<windows.h>
+	<GL/glut.h>
+	"scenes/scene1.h"
+	"scenes/scene2.h"
+	"scenes/scene3.h"
+	"scenes/scene4.h"
+
+1757938737 e:\aiub\summer (24-25)\graphics\mid\project\final_project\merged_scene\scenes\scene1.h
+
+1757943480 e:\aiub\summer (24-25)\graphics\mid\project\final_project\merged_scene\scenes\scene2.h
+
+1757943537 e:\aiub\summer (24-25)\graphics\mid\project\final_project\merged_scene\scenes\scene3.h
+
+1757943572 e:\aiub\summer (24-25)\graphics\mid\project\final_project\merged_scene\scenes\scene4.h
+
